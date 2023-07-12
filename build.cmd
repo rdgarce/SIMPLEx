@@ -1,0 +1,1 @@
+gcc  -o executable.exe -Wall -Wextra -O0 -ggdb  example.c SIMPLEx.c lina/lina.c lina/qr.c -lm

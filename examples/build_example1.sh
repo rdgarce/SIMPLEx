@@ -1,0 +1,1 @@
+gcc -I ../src -o example1.exe example1.c ../src/SIMPLEx.c ../src/lina/lina.c ../src/lina/qr.c -lm

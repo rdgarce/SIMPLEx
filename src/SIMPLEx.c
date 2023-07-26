@@ -92,7 +92,7 @@ static void pivot_matrix(double *p, double *B, uint16_t m, uint16_t index)
 *                   is found. The output parameters contain the structure of the optimal
 *                   solution.
 *       - (-1):  the problem is unlimited
-*       - (-2):  the problem is unfeasable
+*       - (-2):  the problem is infeasible
 *       - (-3):  a memory allocation problem occurred
 *
 *   IMPORTANT NOTES:

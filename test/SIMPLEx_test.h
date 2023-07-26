@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <stdbool.h>
 
 typedef struct PLtest
 {
@@ -17,7 +18,8 @@ typedef struct PLtest
     double *Wcnb;
     double *Wcb;
     double Wb;
-    int ret;
+    bool min_max; // false if problem is minimizing, true if is maximizing
+    int ret; // return value of the execution
 }PLtest_t;
 
 PLtest_t *create_PLtest(uint16_t m, uint16_t n);

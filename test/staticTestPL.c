@@ -6,9 +6,10 @@
 #include "testsPL.h"
 #include "SIMPLEx.h"
 
+#define SIMPLEX_DEBUG
+
 int main()
 {
-
     uint16_t total_num_tests = 0, passed_tests = 0;
     int res;
     bool test_success;
@@ -56,6 +57,6 @@ int main()
         if (test_success)
             passed_tests++;
     }
-    fprintf(stderr,"PL Tests executed: %d/%d passed\n",passed_tests,total_num_tests);
+    fprintf(stderr,"PL static tests executed: %d/%d passed\n",passed_tests,total_num_tests);
+    return 0;
 }
-

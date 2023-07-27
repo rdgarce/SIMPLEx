@@ -3,7 +3,10 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <float.h>
-#include <assert.h>
+#include <math.h>
+#ifdef SIMPLEX_DEBUG
+    #include <assert.h>
+#endif
 
 /*
 *   Pivot the rows of the B matrix around the index-th value of the p vector.
@@ -118,13 +121,16 @@ int simplex_revisedSolve(uint16_t m, uint16_t n, double *AT, double *b, uint16_t
 
     double *B_1 = (double *)calloc(m*m,sizeof(double));
     double *memory_buffer = (double *)malloc(sizeof(double)*(m + n));
+    // Bytemask tale che se lo i-esimo elemento = 1, allora
+    // la var con IDx = i non può entrare in base
+    bool *no_entering_varIDx_mask = (bool *)calloc(n,sizeof(bool));
     
     // returning condition initialized at -3
     int exit_condition = -3;
 
     // Allocation error
     // returns -3
-    if (!B_1 || !memory_buffer)
+    if (!B_1 || !memory_buffer || !no_entering_varIDx_mask)
         goto free_and_return;
     
     double *m_size_buffer = memory_buffer;
@@ -150,7 +156,7 @@ int simplex_revisedSolve(uint16_t m, uint16_t n, double *AT, double *b, uint16_t
         // search for the first entering variable according to the Bland rule:
         // the first negative Wcnb value found determines the entering variable
         uint16_t cnb_index = 0;
-        while (Wcnb[cnb_index] >= 0 && cnb_index < n-m)
+        while ((Wcnb[cnb_index] >= 0 || no_entering_varIDx_mask[nbIDx[cnb_index]]) && cnb_index < n-m)
             cnb_index++;
         
         if (cnb_index == n-m)
@@ -160,7 +166,7 @@ int simplex_revisedSolve(uint16_t m, uint16_t n, double *AT, double *b, uint16_t
             lina_dot(Wcb,b,&simple_buffer,1,m,1);
             simple_buffer = simple_buffer - Wb;
             
-            if (simple_buffer == 0)
+            if (fabs(simple_buffer) < FLT_EPSILON)
                 goto phase2;
             else
             {
@@ -212,6 +218,8 @@ int simplex_revisedSolve(uint16_t m, uint16_t n, double *AT, double *b, uint16_t
         simple_buffer = Zcnb[cnb_index];
         Zcnb[cnb_index] = Zcb[at_index];
         Zcb[at_index] = simple_buffer;
+        // Set the no entering variable flag
+        no_entering_varIDx_mask[exitingVarIDx] = true;
 
         // now we have the updated Wcb and Wcnb
         // we compute the new B^(-1) matrix pivoting around the p vector.
@@ -243,7 +251,7 @@ int simplex_revisedSolve(uint16_t m, uint16_t n, double *AT, double *b, uint16_t
             // search for the first entering variable according to the Bland rule:
             // the first negative Wcnb value found determines the entering variable
             uint16_t cnb_index = 0;
-            while (n_minus_m_size_buffer[cnb_index] >= 0 && cnb_index < n-m)
+            while ((n_minus_m_size_buffer[cnb_index] >= 0 || no_entering_varIDx_mask[nbIDx[cnb_index]]) && cnb_index < n-m)
                 cnb_index++;
             
             if (cnb_index == n-m)
@@ -258,7 +266,7 @@ int simplex_revisedSolve(uint16_t m, uint16_t n, double *AT, double *b, uint16_t
                 lina_dot(m_size_buffer,b,&simple_buffer,1,m,1);
                 simple_buffer = simple_buffer - Wb;
                 
-                if (simple_buffer == 0)
+                if (fabs(simple_buffer) < FLT_EPSILON)
                     goto phase2;
                 else
                 {
@@ -315,7 +323,9 @@ int simplex_revisedSolve(uint16_t m, uint16_t n, double *AT, double *b, uint16_t
             simple_buffer = Zcnb[cnb_index];
             Zcnb[cnb_index] = Zcb[at_index];
             Zcb[at_index] = simple_buffer;
-
+            // Set the no entering variable flag
+            no_entering_varIDx_mask[exitingVarIDx] = true;
+            
             // now we have the updated Wcb and Wcnb
             // we compute the new B^(-1) matrix pivoting around the p vector.
             // the first time the p vector is the one from the AT matrix while
@@ -365,7 +375,7 @@ int simplex_revisedSolve(uint16_t m, uint16_t n, double *AT, double *b, uint16_t
         // search for the first entering variable according to the Bland rule:
         // the first negative Zcnb value found determines the entering variable
         uint16_t cnb_index = 0;
-        while (n_minus_m_size_buffer[cnb_index] >= 0 && cnb_index < n-m)
+        while ((n_minus_m_size_buffer[cnb_index] >= 0 || no_entering_varIDx_mask[nbIDx[cnb_index]]) && cnb_index < n-m)
             cnb_index++;
         
         // if no entering variable is found then the optimal solution is found
@@ -453,5 +463,6 @@ int simplex_revisedSolve(uint16_t m, uint16_t n, double *AT, double *b, uint16_t
     free_and_return:
     free(B_1);
     free(memory_buffer);
+    free(no_entering_varIDx_mask);
     return exit_condition;
 }

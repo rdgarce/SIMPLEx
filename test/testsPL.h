@@ -1,6 +1,6 @@
 #include "SIMPLEx_test.h"
 
-#define N_TESTS 5
+#define N_TESTS 6
 
 // Test 1 definition
 #define PLtest1_m 4
@@ -128,6 +128,27 @@ uint16_t PLtest5_bIDx_opt[PLtest5_m] ={2, 4, 0};
 double PLtest5_b_opt[PLtest5_m] = {1, 3.0/4.0, 1};
 #define PLtest5_Zopt -1.25
 
+// Test 6 definition
+#define PLtest6_m 1
+#define PLtest6_n 2
+double PLtest6_AT[PLtest6_n][PLtest6_m] = {
+                                            {49},
+                                            {1},
+                                        };
+double PLtest6_b[PLtest6_m] = {57};
+uint16_t PLtest6_nbIDx[PLtest6_n - PLtest6_m] ={0};
+uint16_t PLtest6_bIDx[PLtest6_m] ={1};
+double PLtest6_Zcnb[PLtest6_n - PLtest6_m] = {-83};
+double PLtest6_Zcb[PLtest6_m] = {0};
+
+double PLtest6_Wcnb[PLtest6_n - PLtest6_m] = {-49};
+double PLtest6_Wcb[PLtest6_m] = {0};
+#define PLtest6_Wb -57
+
+uint16_t PLtest6_bIDx_opt[PLtest6_m] = {0};
+double PLtest6_b_opt[PLtest6_m] = {1.16326530612244894};
+#define PLtest6_Zopt -96.55102041
+
 // Inserimento dei test nell'array
 PLtest_t PLtest_array[N_TESTS] = {
                                     {
@@ -215,4 +236,21 @@ PLtest_t PLtest_array[N_TESTS] = {
                                         .Zopt_opt = PLtest5_Zopt,
                                         .ret = 0
                                     },
+                                    {
+                                        .AT = (double *)PLtest6_AT,
+                                        .b = (double *)PLtest6_b,
+                                        .b_opt = (double *)PLtest6_b_opt,
+                                        .bIDx = PLtest6_bIDx,
+                                        .bIDx_opt = PLtest6_bIDx_opt,
+                                        .m = PLtest6_m,
+                                        .n = PLtest6_n,
+                                        .nbIDx = PLtest6_nbIDx,
+                                        .Wb = PLtest6_Wb,
+                                        .Wcb = (double *)PLtest6_Wcb,
+                                        .Wcnb = (double *)PLtest6_Wcnb,
+                                        .Zcb = (double *)PLtest6_Zcb,
+                                        .Zcnb = (double *)PLtest6_Zcnb,
+                                        .Zopt_opt = PLtest6_Zopt,
+                                        .ret = 0
+                                    }
                                 };

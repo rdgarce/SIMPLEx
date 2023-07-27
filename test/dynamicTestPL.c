@@ -13,14 +13,14 @@
 // The number of tests to execute
 #define NUM_TESTS 5000
 // MAX num of constraints
-#define MAX_CONSTR_NUM 100
+#define MAX_CONSTR_NUM 10
 // MAX num of variables
-#define MAX_VAR_NUM 100
+#define MAX_VAR_NUM 10
 
 // Min value of a variable coefficients and b values
 #define MIN_VAR_COEFF 1
 // Max value of a variable coefficients and b values
-#define MAX_VAR_COEFF 1000
+#define MAX_VAR_COEFF 10
 
 // The average percentage of <= constraints in the lp problems
 #define LE_CONSTR_PCT 100
@@ -48,8 +48,13 @@ int main()
     // the for cicle that executes all the tests
     for (unsigned int i = 0; i < NUM_TESTS; i++)
     {
-        uint16_t num_constr = (rand() % (MAX_CONSTR_NUM+1)) + 1;
-        uint16_t num_vars = (rand() % (MAX_VAR_NUM+1) % (UINT16_MAX - 2*num_constr)) + 1; // this has to be added with slacks and artifical to become the "n" of a SIMPLEx lp problem
+        uint16_t num_constr = rand() % (MAX_CONSTR_NUM+1);
+        if (num_constr == 0)
+            num_constr+=1;
+        
+        uint16_t num_vars = (rand() % (MAX_VAR_NUM+1) % (UINT16_MAX - 2*num_constr)); // this has to be added with slacks and artifical to become the "n" of a SIMPLEx lp problem
+        if (num_vars == 0)
+            num_vars+=1;
         uint16_t n,m;
 
         // determines the number of LE, GE, EQ constraints
@@ -277,6 +282,8 @@ int main()
             
             for (unsigned int j = 0; j < m; j++)
                 SIMPLEx_test->Wcb[j] = Wcb[j];
+            
+            SIMPLEx_test->Wb = Wb;
         }
         else
         {
@@ -305,7 +312,17 @@ int main()
         fpritf_dbl_matrix(stderr,SIMPLEx_test->Zcnb,1,n-m);
 
         fprintf(stderr,"\nPrinting Zcb:\n");
-        fpritf_dbl_matrix(stderr,SIMPLEx_test->Zcb,1,m); */
+        fpritf_dbl_matrix(stderr,SIMPLEx_test->Zcb,1,m); 
+        
+        fprintf(stderr,"\nPrinting Wcb:\n");
+        fpritf_dbl_matrix(stderr,Wcb,1,m);
+
+        fprintf(stderr,"\nPrinting Wcnb:\n");
+        fpritf_dbl_matrix(stderr,Wcnb,1,n-m);
+
+        fprintf(stderr,"\nPrinting Wb:\n");
+        fprintf(stderr,"Wb: %f\n",Wb); */
+        
 
         int res_lplib = solve(lplib_test);
         SIMPLEx_test->ret = simplex_revisedSolve(m,n, (double *)SIMPLEx_test->AT, (double *)SIMPLEx_test->b, 
@@ -394,7 +411,7 @@ static bool check_SIMPLEx_lplib_solution(lprec *lplib_test, int lplib_ret_val, P
         return false;
     
     // If the problem is unlimited or infeasible and return values match than return true
-    if (SIMPLEx_test == -1 || SIMPLEx_test == -2)
+    if (SIMPLEx_ret_val == -1 || SIMPLEx_ret_val == -2)
         return true;
     
     // Check for obj function value

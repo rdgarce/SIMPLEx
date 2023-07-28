@@ -1,7 +1,5 @@
 #include "SIMPLEx_test.h"
 
-#define N_TESTS 6
-
 // Test 1 definition
 #define PLtest1_m 4
 #define PLtest1_n 6
@@ -149,8 +147,34 @@ uint16_t PLtest6_bIDx_opt[PLtest6_m] = {0};
 double PLtest6_b_opt[PLtest6_m] = {1.16326530612244894};
 #define PLtest6_Zopt -96.55102041
 
+// Test 7 definition (Test not passed)
+#define PLtest7_m 2
+#define PLtest7_n 7
+double PLtest7_AT[PLtest7_n][PLtest7_m] = {
+                                            {3, 9},
+                                            {10, 1},
+                                            {1, 6},
+                                            {1, 6},
+                                            {4, 11},
+                                            {1, 0},
+                                            {0, 1},
+                                        };
+double PLtest7_b[PLtest7_m] = {7, 9};
+uint16_t PLtest7_nbIDx[PLtest7_n - PLtest7_m] ={0, 1, 2, 3, 4};
+uint16_t PLtest7_bIDx[PLtest7_m] ={5, 6};
+double PLtest7_Zcnb[PLtest7_n - PLtest7_m] = {-8, -2, -6, -6, -11};
+double PLtest7_Zcb[PLtest7_m] = {0, 0};
+
+#define PLtest7_Wcnb NULL
+#define PLtest7_Wcb NULL
+#define PLtest7_Wb 0
+
+uint16_t PLtest7_bIDx_opt[PLtest7_m] = {0, 1}; // Not yet known
+double PLtest7_b_opt[PLtest7_m] = {1,1};       // Not yet known
+#define PLtest7_Zopt -9.559322
+
 // Inserimento dei test nell'array
-PLtest_t PLtest_array[N_TESTS] = {
+PLtest_t PLtest_array[] = {
                                     {
                                         .AT = (double *)PLtest1_AT,
                                         .b = (double *)PLtest1_b,
@@ -254,3 +278,5 @@ PLtest_t PLtest_array[N_TESTS] = {
                                         .ret = 0
                                     }
                                 };
+
+#define N_TESTS sizeof(PLtest_array)/sizeof(PLtest_array[0])

@@ -8,19 +8,19 @@
 #include "SIMPLEx.h"
 #include "assert.h"
 
-#define SIMPLEX_DEBUG
+//#define SIMPLEX_DEBUG
 
 // The number of tests to execute
-#define NUM_TESTS 5000
+#define NUM_TESTS 2500
 // MAX num of constraints
-#define MAX_CONSTR_NUM 10
+#define MAX_CONSTR_NUM 100
 // MAX num of variables
-#define MAX_VAR_NUM 10
+#define MAX_VAR_NUM 100
 
 // Min value of a variable coefficients and b values
 #define MIN_VAR_COEFF 1
 // Max value of a variable coefficients and b values
-#define MAX_VAR_COEFF 10
+#define MAX_VAR_COEFF 1000
 
 // The average percentage of <= constraints in the lp problems
 #define LE_CONSTR_PCT 100
@@ -41,6 +41,8 @@ int main()
     // Just to be sure you know what you are doing ;)
     assert(LE_CONSTR_PCT + GE_CONSTR_PCT + EQ_CONSTR_PCT == 100);
     assert(MIN_VAR_COEFF < MAX_VAR_COEFF);
+
+    uint16_t passed_tests = 0;
 
     PLtest_t *SIMPLEx_test;
     lprec *lplib_test;
@@ -325,6 +327,9 @@ int main()
         
 
         int res_lplib = solve(lplib_test);
+
+        //print_lp(lplib_test);
+
         SIMPLEx_test->ret = simplex_revisedSolve(m,n, (double *)SIMPLEx_test->AT, (double *)SIMPLEx_test->b, 
                                             (uint16_t *)SIMPLEx_test->nbIDx, (uint16_t *)SIMPLEx_test->bIDx,
                                             (double *)SIMPLEx_test->Zcnb, (double *)SIMPLEx_test->Zcb, 
@@ -332,7 +337,7 @@ int main()
                                             SIMPLEx_test->Wb,&SIMPLEx_test->Zopt);
         
         if (check_SIMPLEx_lplib_solution(lplib_test,res_lplib,SIMPLEx_test,SIMPLEx_test->ret))
-            fprintf(stderr,"Test match\n");
+            passed_tests++;
         else
         {
             fprintf(stderr,"Tests DONT match\n");
@@ -374,6 +379,7 @@ int main()
         free(Wcnb);
         free(Wcb);
     }
+    fprintf(stderr,"PL dynamic tests executed: %d/%d passed\n",passed_tests,NUM_TESTS);
 }
 
 static void fpritf_dbl_matrix(FILE *fp, double *mat, unsigned int rows, unsigned int cols)

@@ -1,3 +1,5 @@
+@echo off
+
 set incl_test=-I ../src -I ../src/lina
 set src_test=dynamicTestPL.c SIMPLEx_test.c ../src/SIMPLEx.c ../src/lina/lina.c ../src/lina/qr.c
 
@@ -8,5 +10,10 @@ set lplibpath=lpsolve/lib/liblpsolve55.a
 set cc_flags=-DBFP_CALLMODEL=__stdcall -DYY_NEVER_INTERACTIVE -DPARSER_LP -DINVERSE_ACTIVE=INVERSE_LUSOL -DRoleIsExternalInvEngine
 
 rem gcc -Wall -Wextra -O0 -ggdb %incl_test% %incl_lplib% %cc_flags% %src_test% %src_lplib% -lm -o dynamicTestPL
+
 gcc -O0 -Wno-unused-function %incl_test% %incl_lplib% %cc_flags% %src_test% -lm -o dynamicTestPL %lplibpath%
+
+gcc -O0 -Wno-unused-function -I ../src -I ../src/lina staticTestPL.c ../src/SIMPLEx.c ../src/lina/lina.c ../src/lina/qr.c -o staticTestPL.exe -lm
+
+staticTestPL.exe
 dynamicTestPL.exe

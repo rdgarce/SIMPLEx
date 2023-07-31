@@ -113,8 +113,8 @@ double PLtest5_AT[PLtest5_n][PLtest5_m] = {
                                             {0, 0, 1},
                                         };
 double PLtest5_b[PLtest5_m] = {0, 0, 1};
-uint16_t PLtest5_nbIDx[PLtest5_n - PLtest5_m] ={0, 1, 2, 3};
-uint16_t PLtest5_bIDx[PLtest5_m] ={4, 5, 6};
+uint16_t PLtest5_nbIDx[PLtest5_n - PLtest5_m] = {0, 1, 2, 3};
+uint16_t PLtest5_bIDx[PLtest5_m] = {4, 5, 6};
 double PLtest5_Zcnb[PLtest5_n - PLtest5_m] = {-3.0/4.0, 20, -1.0/2.0, 6};
 double PLtest5_Zcb[PLtest5_m] = {0, 0, 0};
 
